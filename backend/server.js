@@ -1,24 +1,12 @@
 const express = require('express');
 const app = express();
-
+// readdirSync is a function that reads the files in a directory
+const {readdirSync} = require('fs');
 const cors = require('cors');
-// cors is used to allow cross origin resource sharing between different domains and ports  (eg. localhost:3000 and localhost:8000)
-const option = {
-    origin: 'http://localhost:3000',
-    useSuccessStatus: 200
-}
-app.use(cors(option));
+app.use(cors());
 
-
-
-// redirecting to different pages
-app.get('/', (req, res) => {
-    res.send('welcome to home');
-});
-
-app.get('/about', (req, res) => {
-    res.send('welcome to about');
-});
+// map is a function that loops through the array and executes a function on each element of the array
+readdirSync('./routes').map((r) => app.use('/', require('./routes/' + r)));
 
 
 // starting the server on port 8000 
