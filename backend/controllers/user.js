@@ -1,3 +1,6 @@
 exports.home = (req, res) => {
-    res.send('welcome to user pannel');
+    res.json({
+        title: 'User Page',
+        message:'This is the user page',
+    })
 };
