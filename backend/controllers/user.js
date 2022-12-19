@@ -1,80 +1,83 @@
-const User = require('../models/User');
-const { validateEmail, validateLength } = require('../helpers/validation');
-const bcrypt = require('bcrypt');
+const { validateEmail, validateLength, validateUsername, } = require("../helpers/validation");
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
+
 
 exports.register = async (req, res) => {
 
     try {
+
         const {
             first_name,
             last_name,
-            username,
             email,
             password,
-            gender,
-            bDay,
+            username,
+            bYear,
             bMonth,
-            bYear } = req.body;
+            bDay,
+            gender,
+        } = req.body;
 
-        // check if email is valid or not
+        // email validation
         if (!validateEmail(email)) {
-            return res.status(400).json(
-                { message: 'Invalid email adrress' }
-            );
-        };
-        //console.log(validateEmail(email));
+            return res.status(400).json({
+                message: "invalid email address",
+            });
+        }
 
         // check if email already exists
         const check = await User.findOne({ email });
-        // if email already exists, return error message
         if (check) {
-            return res.status(400).json(
-                { message: 'Email adrress already exist, try with diffrent email' }
-            );
+            return res.status(400).json({
+                message:
+                    "This email address already exists,try with a different email address",
+            });
         }
 
-        // first name validation
-        if (!validateLength(first_name, 2, 20)) { 
-            return res.status(400).json(
-                { message: 'First Name to short' }
-            );
+        // length validation
+        // first_name
+        if (!validateLength(first_name, 3, 30)) {
+            return res.status(400).json({
+                message: "first name must between 3 and 30 characters.",
+            });
         }
 
-        // last name validation
-        if (!validateLength(last_name, 2, 20)) { 
-            return res.status(400).json(
-                { message: 'Last Name to short' }
-            );
+        // last_name
+        if (!validateLength(last_name, 3, 30)) {
+            return res.status(400).json({
+                message: "last name must between 3 and 30 characters.",
+            });
         }
 
-        //password validation
-        if (!validateLength(password, 6, 20)) { 
-            return res.status(400).json(
-                { message: 'Password to short !! must be atleat 6 character' }
-            );
+        // password
+        if (!validateLength(password, 6, 40)) {
+            return res.status(400).json({
+                message: "password must be atleast 6 characters.",
+            });
         }
 
-        // encrypt password
-        const cryptedPassword = await bcrypt.hash(password, 12); // 12 is salt
-        console.log(cryptedPassword);
+        // password encryption
+        const cryptedPassword = await bcrypt.hash(password, 12); // 12 is the salt
 
-    return;
+        // username validation
+        let tempUsername = first_name + last_name;
+        let newUsername = await validateUsername(tempUsername);
+
+
         const user = await new User({
             first_name,
             last_name,
-            username,
             email,
-            password,
-            gender,
-            bDay,
+            password: cryptedPassword,
+            username: newUsername,
+            bYear,
             bMonth,
-            bYear
+            bDay,
+            gender,
         }).save();
-
         res.json(user);
-
-    } catch (err) {
-        // show error message
-        res.status(400).json({ message: err.message });
-    };
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
