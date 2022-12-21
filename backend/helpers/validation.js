@@ -7,7 +7,7 @@ exports.validateEmail = (email) => {
 };
 
 
-// length validation
+// length validation for username, first_name, last_name, password
 exports.validateLength = (text, min, max) => {
     if (text.length > max || text.length < min) {
         return false;
