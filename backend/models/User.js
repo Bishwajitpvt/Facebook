@@ -1,28 +1,27 @@
-//models are used to define the structure of the data that will be stored in the database
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
-const mongoose = require('mongoose');
-const { ObjectId } = mongoose.Schema; //find the object id of the user
 
-const userSchema = new mongoose.Schema(
-
+const userSchema = mongoose.Schema(
     {
+
         first_name: {
             type: String,
-            required: [true, 'First name is required'],
+            required: [true, "first name is required"],
             trim: true,
             text: true,
         },
 
         last_name: {
             type: String,
-            required: [true, 'Last name is required'],
+            required: [true, "last name is required"],
             trim: true,
             text: true,
         },
 
         username: {
             type: String,
-            required: [true, 'User Name is required'],
+            required: [true, "username is required"],
             trim: true,
             text: true,
             unique: true,
@@ -30,46 +29,48 @@ const userSchema = new mongoose.Schema(
 
         email: {
             type: String,
-            required: [true, 'Email is required'],
+            required: [true, "email is required"],
             trim: true,
         },
 
         password: {
             type: String,
-            required: [true, 'Password is required'],
+            required: [true, "password is required"],
+        },
+
+        picture: {
+            type: String,
+            trim: true,
+            default:
+                "https://res.cloudinary.com/dmhcnhtng/image/upload/v1643044376/avatars/default_pic_jeaybr.png",
+        },
+
+        cover: {
+            type: String,
+            trim: true,
         },
 
         gender: {
             type: String,
-            required: [true, 'Gender is required'],
-            trim: true,
-        },
-
-        bDay: {
-            type: Number,
-            require: true,
-            trim: true,
-        },
-
-        bMonth: {
-            type: Number,
-            require: true,
+            required: [true, "gender is required"],
             trim: true,
         },
 
         bYear: {
             type: Number,
-            require: true,
+            required: true,
             trim: true,
         },
 
-        picture: {
-            type: String,
-            default: "https://res.cloudinary.com/dzcmadjl1/image/upload/v1621361006/avatars/avatar-1_gxqjxu.png",
+        bMonth: {
+            type: Number,
+            required: true,
+            trim: true,
         },
 
-        cover: {
-            type: String,
+        bDay: {
+            type: Number,
+            required: true,
             trim: true,
         },
 
@@ -93,19 +94,18 @@ const userSchema = new mongoose.Schema(
             default: [],
         },
 
-        request: {
+        requests: {
             type: Array,
             default: [],
         },
 
-        // search for users using the object id  
         search: [
             {
                 user: {
                     type: ObjectId,
-                    ref: 'User',
-                }
-            }
+                    ref: "User",
+                },
+            },
         ],
 
         details: {
@@ -124,19 +124,19 @@ const userSchema = new mongoose.Schema(
             highSchool: {
                 type: String,
             },
-            collage: {
+            college: {
                 type: String,
             },
             currentCity: {
                 type: String,
             },
-            homeTown: {
+            hometown: {
                 type: String,
             },
             relationship: {
                 type: String,
-                enum: ['Single', 'Married', 'Engaged', 'In a relationship', 'It\'s complicated', 'Divorced', 'Widowed'],
-                //enum => only this array value can be used
+                enum: ["Single", "In a relationship", "Married", "Divorced"],
+                // enum => can select only above options
             },
             instagram: {
                 type: String,
@@ -147,20 +147,21 @@ const userSchema = new mongoose.Schema(
             {
                 post: {
                     type: ObjectId,
-                    ref: 'Post', //post model
+                    ref: "Post",
                 },
                 savedAt: {
                     type: Date,
                     default: new Date(),
                 },
-            }
+            },
         ],
 
     },
 
     {
-        timeStamps: true, //stores the created and updated time in the db
+        timestamps: true,
     }
+
 );
 
 module.exports = mongoose.model("User", userSchema);
