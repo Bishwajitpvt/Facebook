@@ -1,31 +1,28 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const { readdirSync } = require('fs'); // readdirSync is a function that reads the files in a directory
-const cors = require('cors');
-const dotenv = require('dotenv');
-const { connect } = require('http2');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const { readdirSync } = require("fs");
+const dotenv = require("dotenv");
 dotenv.config();
-
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// routes
-// map is a function that loops through the array and executes a function on each element of the array
-readdirSync('./routes').map((r) => app.use('/', require('./routes/' + r)));
+
+//routes
+readdirSync("./routes").map((r) => app.use("/", require("./routes/" + r)));
 
 
-// database connection
+//database
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
-}).then(() => console.log('Database connected successfully'))
-  .catch((err) => console.log('database connection error', err));
+}).then(() => console.log("database connected successfully"))
+  .catch((err) => console.log("error connecting to mongodb", err));
 
 
-
-// starting the server on port 8000 
+// start server on port 8000
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log('Server is running on port 8000');
+  console.log(`server is running on port ${PORT}..`);
 });

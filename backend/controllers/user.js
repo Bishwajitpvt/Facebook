@@ -89,6 +89,21 @@ exports.register = async (req, res) => {
         const url = `${process.env.BASE_URL}/activate/${emailVerificationToken}`;
         sendVerificationEmail(user.email, user.first_name, url);
 
+        // setting timer for token expiration
+        const token = generateToken({ id: user._id.toString() }, "1d");
+
+        // send response to client side
+        res.send({
+            id: user._id,
+            username: user.username,
+            picture: user.picture,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            token: token,
+            verfied: user.verified,
+            message: "Registration successful, please verify your email address",
+        });
+
         //res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });
