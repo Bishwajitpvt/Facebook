@@ -1,26 +1,37 @@
 import "./style.css";
-import { ErrorMessage, useField } from "formik";
+import { useField, ErrorMessage } from "formik";
+import { useMediaQuery } from "react-responsive";
+
 
 export default function LoginInput({ placeholder, bottom, ...props }) {
 
     const [field, meta] = useField(props);
+    const desktopView = useMediaQuery({
+        query: "(min-width: 850px)",
+    });
 
     return (
 
         <div className="input_wrap">
-            {/* show error email */}
-            {meta.touched && meta.error && !bottom && (
 
-                <div className="input_error" style={{ transform: "translateY(3px)" }}>
+            {meta.touched && meta.error && !bottom && (
+                <div
+                    className={
+                        desktopView ? "input_error input_error_desktop" : "input_error"
+                    }
+                    style={{ transform: "translateY(3px)" }}
+                >
                     {meta.touched && meta.error && <ErrorMessage name={field.name} />}
                     {meta.touched && meta.error && (
-                        <div className="error_arrow_top"></div>
-                    )} 
+                        <div
+                            className={desktopView ? "error_arrow_left" : "error_arrow_top"}
+                        ></div>
+                    )}
                 </div>
             )}
 
             <input
-                // input_error_border is a class name in style.css
+                // input_error_border is a class that is defined in style.css
                 className={meta.touched && meta.error ? "input_error_border" : ""}
                 type={field.type}
                 name={field.name}
@@ -29,21 +40,31 @@ export default function LoginInput({ placeholder, bottom, ...props }) {
                 {...props}
             />
 
-            {/* show error at bottom i.e for password */}
+            {/* show error at bottom of password */}
             {meta.touched && meta.error && bottom && (
-
-                <div className="input_error" style={{ transform: "translateY(2px)" }}>
+                <div
+                    className={
+                        desktopView ? "input_error input_error_desktop" : "input_error"
+                    }
+                    style={{ transform: "translateY(2px)" }}
+                >
                     {meta.touched && meta.error && <ErrorMessage name={field.name} />}
                     {meta.touched && meta.error && (
-                        <div className="error_arrow_bottom"></div>
-                    )} 
+                        <div
+                            className={
+                                desktopView ? "error_arrow_left" : "error_arrow_bottom"
+                            }
+                        ></div>
+                    )}
                 </div>
             )}
 
-
-            {meta.touched && meta.error && <i className="error_icon"
-                style={{ top: `${!bottom ? "63%" : "15px"}` }}></i>}
+            {meta.touched && meta.error && (
+                <i
+                    className="error_icon"
+                    style={{ top: `${!bottom && !desktopView ? "63%" : "15px"}` }}
+                ></i>
+            )}
         </div>
-
     );
 }
