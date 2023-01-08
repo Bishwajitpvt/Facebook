@@ -1,6 +1,7 @@
 import "./style.css";
 import LoginForm from "../../components/login/LoginForm";
 import LoginFooter from "../../components/login/LoginFooter";
+import RegisterForm from "../../components/login/RegisterForm";
 
 
 export default function Login() {
@@ -11,7 +12,7 @@ export default function Login() {
       <div className="login_wrapper">
         <LoginForm />
 
-        <div className="register"></div>
+        <RegisterForm/>
 
         {/* footer */}
         <LoginFooter />
